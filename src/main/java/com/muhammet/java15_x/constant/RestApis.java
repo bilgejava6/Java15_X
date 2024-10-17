@@ -9,5 +9,9 @@ public class RestApis {
 
     private static final String ROOT = VERSION+ DEVELOPER;
 
+    public static final String USER = ROOT+ "/user";
+
+    public static final String REGISTER = "/register";
+    public static final String DOLOGIN = "/dologin";
 
 }
