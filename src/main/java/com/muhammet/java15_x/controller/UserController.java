@@ -3,16 +3,15 @@ package com.muhammet.java15_x.controller;
 import com.muhammet.java15_x.dto.request.DologinRequestDto;
 import com.muhammet.java15_x.dto.request.RegisterRequestDto;
 import com.muhammet.java15_x.dto.response.BaseResponse;
+import com.muhammet.java15_x.entity.User;
 import com.muhammet.java15_x.exception.ErrorType;
 import com.muhammet.java15_x.exception.Java15XException;
 import com.muhammet.java15_x.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import static com.muhammet.java15_x.constant.RestApis.*;
 @RestController
 @RequestMapping(USER)
@@ -42,6 +41,18 @@ public class UserController {
                         .data(token)
                         .code(200)
                 .build());
+    }
+
+    @GetMapping(GETPROFILE)
+    public ResponseEntity<BaseResponse<User>> getProfile(String token){
+        return  ResponseEntity.ok(
+                BaseResponse.<User>builder()
+                        .code(200)
+                        .data(userService.getProfile(token))
+                        .message("profil bilgisi getirildi.")
+                        .success(true)
+                        .build()
+        );
     }
 
 }

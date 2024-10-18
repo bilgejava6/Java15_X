@@ -4,10 +4,15 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5444/java15x
-    username: postgres
-    password: root
+    url: ${JAVA15_POSTGRE_URL}
+    username: ${JAVA15_POSTGRE_USERNAME}
+    password: ${JAVA15_POSTGRE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+java15:
+  jwt:
+    secret-key: ${JAVA15_JWT_SECRETKEY}
+    issuer: ${JAVA15_JWT_ISSUER}
