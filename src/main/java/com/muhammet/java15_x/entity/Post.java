@@ -23,5 +23,6 @@ public class Post {
     Integer commentCount;
     Integer likeCount;
     Integer viewCount;
-    PostState state;
+    @Builder.Default
+    PostState state = PostState.ACTIVE;
 }
