@@ -9,10 +9,15 @@ import com.muhammet.java15_x.exception.Java15XException;
 import com.muhammet.java15_x.mapper.UserMapper;
 import com.muhammet.java15_x.repository.UserRepository;
 import com.muhammet.java15_x.utility.JwtManager;
+import com.muhammet.java15_x.views.VwUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,4 +58,8 @@ public class UserService {
     }
 
 
+    public Map<Long,VwUser> findAllByIds(List<Long> userIds) {
+        return repository.findAllByUserIds(userIds).stream()
+                .collect(Collectors.toMap(VwUser::id, vwUser -> vwUser));
+    }
 }
