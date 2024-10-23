@@ -2,6 +2,10 @@ server:
   port: 9090
 
 spring:
+  security:
+    user:
+      name: ${SECURITY_USERNAME}
+      password: ${SECURITY_PASSWORD}
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${JAVA15_POSTGRE_URL}

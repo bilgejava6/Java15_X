@@ -14,6 +14,7 @@ import com.muhammet.java15_x.repository.PostRepository;
 import com.muhammet.java15_x.utility.JwtManager;
 import com.muhammet.java15_x.views.VwUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
@@ -52,9 +54,13 @@ public class PostService {
     }
 
     public List<AllPostsResponseDto> getAllPosts(String token){
+        Long start = System.nanoTime();
         Optional<Long> userId = jwtManager.validateToken(token);
         if(userId.isEmpty()) throw new Java15XException(ErrorType.INVALID_TOKEN);
+        Long postListStart = System.nanoTime();
         List<Post> postList = postRepository.findTop100ByOrderByDateDesc();//0-3ms
+        Long postListEnd = System.nanoTime();
+        log.info("db post request...: "+ (postListEnd-postListStart)+"ns");
         /**
          * postları kısıtlayın. mesela date e göre son altılmış 10 post
          * post listesinin içerisinden userid lerin listesini çıkartın. List<Long> userids
@@ -66,15 +72,20 @@ public class PostService {
          * 30.000 -> 1/30.000ms de 100 datayı işleyebilir.
          */
         List<Long> userIds = postList.stream().map(Post::getUserId).toList(); // ms altındadır.
+        Long userListStart = System.nanoTime();
         Map<Long,VwUser> userList = userService.findAllByIds(userIds);// 0-2ms -> 10.000
+        Long userListEnd = System.nanoTime();
+        log.info("db user request...: "+ (userListEnd-userListStart)+"ns");
         List<AllPostsResponseDto> result = new ArrayList<>();
         postList.forEach(p->{
             VwUser user = userList.get(p.getUserId());
             AllPostsResponseDto newDto = PostMapper.INSTANCE.fromPostAndUser(p,user.userName(),user.name(),user.avatar());
             result.add(newDto);
         }); // 0-1ms
+        Long end = System.nanoTime();
+        log.info("getAllPosts took " + (end - start)  + "ns");
+        log.info("getAllPosts took " + (end - start) / 1_000_000  + "ms");
         return result;
-
     }
 
 
