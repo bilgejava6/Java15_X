@@ -21,7 +21,8 @@ import java.util.Optional;
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired // ilgili değişken için nesne(bean) yaratmak için kullanırız.
     private JwtManager jwtManager;
-
+    @Autowired
+    private JwtUserDetails jwtUserDetails;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -35,7 +36,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(7);
           Optional<Long> userId = jwtManager.validateToken(token);
           if(userId.isPresent()) {
-              UserDetails userDetails = null;
+              UserDetails userDetails = jwtUserDetails.getUserById(userId.get());
               // spring in bizim kimliğimizi doğrulayabileceği kendi içerisinde yetkileri yönetebileceği token
               UsernamePasswordAuthenticationToken authenticationToken
                        = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

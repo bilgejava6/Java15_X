@@ -36,7 +36,7 @@ public class Java15XSecurityConfig {
                             "/v1/dev/user/register", "/v1/dev/user/dologin"
                     ) // eşleşecek end-point lerin tam path i yada genişletilmiş şekli yazılır.
                     .permitAll() // public olarak erişime izin ver.
-                    .requestMatchers("/admin/**").hasRole("ADMIN") // admin rolune sahip olmak
+                    .requestMatchers("/admin/**", "/v1/dev/post/get-all-posts").hasAuthority("AHMETAMCA") // admin rolune sahip olmak
                     .anyRequest() // diğer tüm istekler
                     .authenticated() // oturum açmış olma zorunluluğu kıl.
         );

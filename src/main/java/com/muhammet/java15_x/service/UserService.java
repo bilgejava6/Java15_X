@@ -62,4 +62,8 @@ public class UserService {
         return repository.findAllByUserIds(userIds).stream()
                 .collect(Collectors.toMap(VwUser::id, vwUser -> vwUser));
     }
+
+    public Optional<User> findById(Long userId) {
+        return repository.findById(userId);
+    }
 }
