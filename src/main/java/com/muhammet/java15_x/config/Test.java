@@ -8,5 +8,11 @@ public class Test {
         }
         Long endTime = System.currentTimeMillis();
         System.out.println("Geçen Süre...: "+ (endTime-currentTime));
+
+        /**
+         *
+         * 1. beş
+         * 2. on
+         */
     }
 }

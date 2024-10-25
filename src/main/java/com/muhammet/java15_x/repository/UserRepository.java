@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("select new com.muhammet.java15_x.views.VwUser(u.id,u.userName,u.name,u.avatar) from User u where u.id in(?1)")
     List<VwUser> findAllByUserIds(List<Long> userIds);
+
+    Optional<User> findOptionalByUserName(String userName);
 }

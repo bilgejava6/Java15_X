@@ -33,7 +33,8 @@ public class Java15XSecurityConfig {
             req
                     .requestMatchers(
                             "/swagger-ui/**", "/v3/api-docs/**",
-                            "/v1/dev/user/register", "/v1/dev/user/dologin"
+                            "/v1/prod/user/register", "/v1/prod/user/dologin",
+                            "/v1/dev/**"
                     ) // eşleşecek end-point lerin tam path i yada genişletilmiş şekli yazılır.
                     .permitAll() // public olarak erişime izin ver.
                     .requestMatchers("/admin/**", "/v1/dev/post/get-all-posts").hasAuthority("AHMETAMCA") // admin rolune sahip olmak
