@@ -89,4 +89,26 @@ public class PostService {
     }
 
 
+    public boolean existsPostById(Long postId) {
+       return postRepository.existsById(postId);
+    }
+
+    public void addLike(Long postId) {
+        Optional<Post> post =  postRepository.findById(postId);
+        if(post.isPresent()) {
+            Post editPost = post.get();
+            editPost.setLikeCount(editPost.getLikeCount()+1);
+            postRepository.save(editPost);
+        }
+    }
+
+    public void unLike(Long postId) {
+        Optional<Post> post =  postRepository.findById(postId);
+        if(post.isPresent()) {
+            Post editPost = post.get();
+            int unlikeCount = editPost.getLikeCount() >0 ? editPost.getLikeCount()-1 : 0;
+            editPost.setLikeCount(unlikeCount);
+            postRepository.save(editPost);
+        }
+    }
 }

@@ -11,6 +11,8 @@ public class RestApis {
 
     public static final String USER = ROOT+ "/user";
     public static final String POST = ROOT+ "/post";
+    public static final String LIKE = ROOT+ "/like";
+
 
     public static final String REGISTER = "/register";
     public static final String DOLOGIN = "/dologin";
@@ -18,4 +20,7 @@ public class RestApis {
     public static final String NEWPOST = "/new-post";
     public static final String GETALLMYPOSTS = "/get-all-my-posts";
     public static final String GETALLPOSTS = "/get-all-posts";
+
+    public static final String ADDLIKE = "/add-like";
+    public static final String UNLIKE = "/un-like";
 }
