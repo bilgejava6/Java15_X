@@ -3,6 +3,7 @@ package com.muhammet.java15_x.repository;
 import com.muhammet.java15_x.entity.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Integer> {
@@ -16,4 +17,8 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
      * @return
      */
     Optional<Like> findOptionalByUserIdAndPostId(Long userId, Long postId);
+
+    List<Like> findAllByPostId(Long postId);
+
+    List<Like> findAllByPostIdIn(List<Long> postIds);
 }

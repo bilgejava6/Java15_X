@@ -3,10 +3,7 @@ package com.muhammet.java15_x.service;
 import com.muhammet.java15_x.dto.request.NewPostRequestDto;
 import com.muhammet.java15_x.dto.response.AllPostsResponseDto;
 import com.muhammet.java15_x.dto.response.BaseResponse;
-import com.muhammet.java15_x.entity.Like;
-import com.muhammet.java15_x.entity.Post;
-import com.muhammet.java15_x.entity.PostState;
-import com.muhammet.java15_x.entity.User;
+import com.muhammet.java15_x.entity.*;
 import com.muhammet.java15_x.exception.ErrorType;
 import com.muhammet.java15_x.exception.Java15XException;
 import com.muhammet.java15_x.mapper.PostMapper;
@@ -27,6 +24,7 @@ import java.util.*;
 public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
+    private final LikeService likeService;
     private final JwtManager jwtManager;
 
     public void newPost(NewPostRequestDto dto) {
@@ -76,10 +74,22 @@ public class PostService {
         Map<Long,VwUser> userList = userService.findAllByIds(userIds);// 0-2ms -> 10.000
         Long userListEnd = System.nanoTime();
         log.info("db user request...: "+ (userListEnd-userListStart)+"ns");
+        List<Long> postIds = postList.stream().map(Post::getId).toList(); // post listesi içinden postların id lerini çekiyoruz
+        List<Like> postsLikeList = likeService.getLikeByPostId(postIds); // id leri verilen postların like listesini buluyoruz.
         List<AllPostsResponseDto> result = new ArrayList<>();
         postList.forEach(p->{
             VwUser user = userList.get(p.getUserId());
-            AllPostsResponseDto newDto = PostMapper.INSTANCE.fromPostAndUser(p,user.userName(),user.name(),user.avatar());
+            // userId post listesini çekmek için token gönderen kullanıcıyı ifade eder.
+            boolean isLike= false;
+            Optional<Like> findLike = postsLikeList.stream()
+                    .filter(x-> x.getUserId().equals(userId.get()) && x.getPostId().equals(p.getId())).findAny();
+            /**
+             * Eğer DB de kayıtlı bir like var ise, bunun liked olduğunfan emin ol ve
+             * bu bilgiyi isLike a aktar. Eğer liked ise true, değil ise false
+             */
+            if(findLike.isPresent())
+                isLike = findLike.get().getState().equals(LikeState.LIKED);
+            AllPostsResponseDto newDto = PostMapper.INSTANCE.fromPostAndUser(p,user.userName(),user.name(),user.avatar(), isLike);
             result.add(newDto);
         }); // 0-1ms
         Long end = System.nanoTime();

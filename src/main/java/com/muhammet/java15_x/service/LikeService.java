@@ -10,6 +10,7 @@ import com.muhammet.java15_x.utility.JwtManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,5 +46,9 @@ public class LikeService {
         like.setState(LikeState.UNLIKED);
         repository.save(like);
         return true;
+    }
+
+    public List<Like> getLikeByPostId(List<Long> postIds){
+        return repository.findAllByPostIdIn(postIds);
     }
 }

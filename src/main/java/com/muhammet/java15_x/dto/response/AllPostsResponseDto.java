@@ -12,6 +12,7 @@ public record AllPostsResponseDto(
         Integer likeCount,
         Integer viewCount,
         Long userId,
-        Integer reteweetCount
+        Integer reteweetCount,
+        boolean isLike
 ) {
 }
