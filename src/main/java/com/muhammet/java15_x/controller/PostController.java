@@ -16,6 +16,7 @@ import static com.muhammet.java15_x.constant.RestApis.*;
 @RestController
 @RequestMapping(POST)
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class PostController {
     private final PostService postService;
 

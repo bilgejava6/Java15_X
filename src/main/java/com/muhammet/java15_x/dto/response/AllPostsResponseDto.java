@@ -10,6 +10,8 @@ public record AllPostsResponseDto(
         Long date,
         Integer commentCount,
         Integer likeCount,
-        Integer viewCount
+        Integer viewCount,
+        Long userId,
+        Integer reteweetCount
 ) {
 }

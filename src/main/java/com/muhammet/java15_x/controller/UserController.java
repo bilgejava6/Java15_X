@@ -16,6 +16,7 @@ import static com.muhammet.java15_x.constant.RestApis.*;
 @RestController
 @RequestMapping(USER)
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class UserController {
     private final UserService userService;
 
