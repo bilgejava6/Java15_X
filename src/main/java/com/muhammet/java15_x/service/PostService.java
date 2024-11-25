@@ -52,13 +52,21 @@ public class PostService {
     }
 
     public List<AllPostsResponseDto> getAllPosts(String token){
-        Long start = System.nanoTime();
         Optional<Long> userId = jwtManager.validateToken(token);
         if(userId.isEmpty()) throw new Java15XException(ErrorType.INVALID_TOKEN);
-        Long postListStart = System.nanoTime();
         List<Post> postList = postRepository.findTop100ByOrderByDateDesc();//0-3ms
-        Long postListEnd = System.nanoTime();
-        log.info("db post request...: "+ (postListEnd-postListStart)+"ns");
+        return getAllPostsResponseDtos(postList, userId);
+    }
+
+    public AllPostsResponseDto getPostById(String token, Long postId) {
+        Optional<Long> userId = jwtManager.validateToken(token);
+        if(userId.isEmpty()) throw new Java15XException(ErrorType.INVALID_TOKEN);
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty()) throw new Java15XException(ErrorType.POST_NOTFOUND);
+        return getAllPostsResponseDtos(List.of(post.get()), userId).get(0);
+    }
+
+    private List<AllPostsResponseDto> getAllPostsResponseDtos(List<Post> postList, Optional<Long> userId) {
         /**
          * postları kısıtlayın. mesela date e göre son altılmış 10 post
          * post listesinin içerisinden userid lerin listesini çıkartın. List<Long> userids
@@ -70,10 +78,9 @@ public class PostService {
          * 30.000 -> 1/30.000ms de 100 datayı işleyebilir.
          */
         List<Long> userIds = postList.stream().map(Post::getUserId).toList(); // ms altındadır.
-        Long userListStart = System.nanoTime();
+
         Map<Long,VwUser> userList = userService.findAllByIds(userIds);// 0-2ms -> 10.000
-        Long userListEnd = System.nanoTime();
-        log.info("db user request...: "+ (userListEnd-userListStart)+"ns");
+
         List<Long> postIds = postList.stream().map(Post::getId).toList(); // post listesi içinden postların id lerini çekiyoruz
         List<Like> postsLikeList = likeService.getLikeByPostId(postIds); // id leri verilen postların like listesini buluyoruz.
         List<AllPostsResponseDto> result = new ArrayList<>();
@@ -92,9 +99,6 @@ public class PostService {
             AllPostsResponseDto newDto = PostMapper.INSTANCE.fromPostAndUser(p,user.userName(),user.name(),user.avatar(), isLike);
             result.add(newDto);
         }); // 0-1ms
-        Long end = System.nanoTime();
-        log.info("getAllPosts took " + (end - start)  + "ns");
-        log.info("getAllPosts took " + (end - start) / 1_000_000  + "ms");
         return result;
     }
 
@@ -121,4 +125,6 @@ public class PostService {
             postRepository.save(editPost);
         }
     }
+
+
 }

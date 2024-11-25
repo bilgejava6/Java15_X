@@ -57,4 +57,16 @@ public class PostController {
         );
     }
 
+    @GetMapping(GETPOSTBYID)
+    public ResponseEntity<BaseResponse<AllPostsResponseDto>> getPostById(String token, Long postId){
+        return ResponseEntity.ok(
+                BaseResponse.<AllPostsResponseDto>builder()
+                        .code(200)
+                        .success(true)
+                        .message("Ok")
+                        .data(postService.getPostById(token,postId))
+                        .build()
+        );
+    }
+
 }

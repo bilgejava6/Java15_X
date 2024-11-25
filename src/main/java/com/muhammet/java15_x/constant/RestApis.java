@@ -20,6 +20,7 @@ public class RestApis {
     public static final String NEWPOST = "/new-post";
     public static final String GETALLMYPOSTS = "/get-all-my-posts";
     public static final String GETALLPOSTS = "/get-all-posts";
+    public static final String GETPOSTBYID = "/get-post-by-id";
 
     public static final String ADDLIKE = "/add-like";
     public static final String UNLIKE = "/un-like";
